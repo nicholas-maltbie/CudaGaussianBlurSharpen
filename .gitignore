@@ -1,0 +1,6 @@
+*.o
+*.png
+*.swp
+.vscode
+.vscode/*
+blur
