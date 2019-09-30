@@ -8,7 +8,7 @@
 
 
 int main(int argc, char** argv) {
-    if(argc != 5) {
+    if(argc < 5) {
         printf("Usage: %s img_in.png img_out.png filter_type filter_size\n", argv[0]);
         printf("    img_in.png - path to input image (png format)\n");
         printf("    img_out.png - path to output image (png format)\n");
@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
         printf("        0 : no filter\n");
         printf("        1 : box_blur\n");
         printf("        2 : gaussian_blur\n");
+        printf("        3 : sharpen\n");
         printf("    filter_size - if a filter has a size parameter, this is the value\n");
         return 0;
     }
@@ -24,7 +25,7 @@ int main(int argc, char** argv) {
     const char* input_file = argv[1];
     const char* output_file = argv[2];
     const int filter_type = atoi(argv[3]);
-    const int filter_size = atoi(argv[4]);
+    int filter_size = 0;
 
     // Prepare a vector to accept 
     std::vector<unsigned char> in_image;
@@ -56,9 +57,14 @@ int main(int argc, char** argv) {
     }
     else if (filter_type == 1) {
         sel_filter = BOX_BLUR_FILTER;
+        filter_size = atoi(argv[4]);
     }
     else if (filter_type == 2) {
         sel_filter = GAUSS_BLUR_FILTER;
+        filter_size = atoi(argv[4]);
+    }
+    else if (filter_type == 3) {
+        sel_filter = SHARPEN_FILTER;
     }
     else {
         printf("Invalid filter type %i selected", filter_type);
