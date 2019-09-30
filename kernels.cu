@@ -6,9 +6,11 @@
 __global__
 void identity(unsigned char* input_image, unsigned char* output_image, int width, int height) {
 
-    const unsigned int offset = blockIdx.x*blockDim.x + threadIdx.x;
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    const unsigned int offset = y * width + x;
 
-    if(offset < width*height) {
+    if(x < width && y < height) {
         output_image[offset * 3] = input_image[offset * 3]; 
         output_image[offset * 3 + 1] = input_image[offset * 3 + 1]; 
         output_image[offset * 3 + 2] = input_image[offset * 3 + 2]; 
@@ -20,11 +22,12 @@ void gauss_blur(unsigned char* input_image, unsigned char* output_image, int wid
         float* filter, int fsize) {
     
     const int size = 2*fsize+1;
-    const unsigned int offset = blockIdx.x*blockDim.x + threadIdx.x;
-    int x = offset % width;
-    int y = (offset-x)/width;
 
-    if(offset < width*height) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    const unsigned int offset = y * width + x;
+
+    if(x < width && y < height) {
         float output_red = 0;
         float output_green = 0;
         float output_blue = 0;
@@ -55,11 +58,13 @@ void gauss_blur(unsigned char* input_image, unsigned char* output_image, int wid
 __global__
 void box_blur(unsigned char* input_image, unsigned char* output_image, int width, int height, int fsize) {
 
-    const unsigned int offset = blockIdx.x*blockDim.x + threadIdx.x;
-    int x = offset % width;
-    int y = (offset-x)/width;
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    const unsigned int offset = y * width + x;
+
     int hits = 0;
-    if(offset < width*height) {
+
+    if(x < width && y < height) {
         float output_red = 0;
         float output_green = 0;
         float output_blue = 0;
@@ -93,9 +98,12 @@ void filter (unsigned char* input_image, unsigned char* output_image, int width,
  
     getError(cudaMalloc( (void**) &dev_output, width*height*3*sizeof(unsigned char)));
 
-    dim3 blockDims(512,1,1);
-    dim3 gridDims((unsigned int) ceil((double)(width*height*3/blockDims.x)), 1, 1 );
-
+    dim3 blockDims(128,128,1);
+    dim3 gridDims(
+        width/blockDims.x + 1, 
+        height/blockDims.y + 1, 
+        1
+    );
 
     cudaDeviceSynchronize();
 
