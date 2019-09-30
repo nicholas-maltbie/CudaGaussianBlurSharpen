@@ -3,6 +3,17 @@
 #include <iostream>
 #include <cmath>
 
+__global__
+void identity(unsigned char* input_image, unsigned char* output_image, int width, int height) {
+
+    const unsigned int offset = blockIdx.x*blockDim.x + threadIdx.x;
+
+    if(offset < width*height) {
+        output_image[offset * 3] = input_image[offset * 3]; 
+        output_image[offset * 3 + 1] = input_image[offset * 3 + 1]; 
+        output_image[offset * 3 + 2] = input_image[offset * 3 + 2]; 
+    }
+}
 
 __global__
 void blur(unsigned char* input_image, unsigned char* output_image, int width, int height) {
@@ -35,7 +46,7 @@ void blur(unsigned char* input_image, unsigned char* output_image, int width, in
 }
 
 
-void filter (unsigned char* input_image, unsigned char* output_image, int width, int height) {
+void filter (unsigned char* input_image, unsigned char* output_image, int width, int height, int filter_type) {
 
     unsigned char* dev_input;
     unsigned char* dev_output;
@@ -47,7 +58,12 @@ void filter (unsigned char* input_image, unsigned char* output_image, int width,
     dim3 blockDims(512,1,1);
     dim3 gridDims((unsigned int) ceil((double)(width*height*3/blockDims.x)), 1, 1 );
 
-    blur<<<gridDims, blockDims>>>(dev_input, dev_output, width, height); 
+    if (filter_type == BLUR_FILTER) {
+        blur<<<gridDims, blockDims>>>(dev_input, dev_output, width, height); 
+    }
+    else if (filter_type == IDENTITY_FILTER) {
+        identity<<<gridDims, blockDims>>>(dev_input, dev_output, width, height); 
+    }
 
 
     getError(cudaMemcpy(output_image, dev_output, width*height*3*sizeof(unsigned char), cudaMemcpyDeviceToHost ));

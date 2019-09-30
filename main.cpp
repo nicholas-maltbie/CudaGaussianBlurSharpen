@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include "lodepng.h"
 #include <cuda.h>
-#include <cuda_runtime.h>
 #include "kernels.h"
 #include <functional>
 
@@ -41,7 +40,7 @@ int main(int argc, char** argv) {
     }
 
     // Run the filter on it
-    filter(input_image, output_image, width, height); 
+    filter(input_image, output_image, width, height, IDENTITY_FILTER); 
 
     // Prepare data for output
     std::vector<unsigned char> out_image;
@@ -56,7 +55,9 @@ int main(int argc, char** argv) {
     error = lodepng::encode(output_file, out_image, width, height);
 
     //if there's an error, display it
-    if(error) std::cout << "encoder error " << error << ": "<< lodepng_error_text(error) << std::endl;
+    if(error) {
+        printf("encoder error %i: %s\n", error, lodepng_error_text(error));
+    }
 
     delete[] input_image;
     delete[] output_image;

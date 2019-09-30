@@ -15,10 +15,7 @@ CU_SRCS  = kernels.cu
 OBJS = $(CPP_SRCS:.cpp=.o)
 OBJS += $(CU_SRCS:.cu=.o)
 
-#nvcc -c kernels.cu
-#nvcc -ccbin g++ -Xcompiler "-std=c++11" kernels.o main.cpp lodepng.cpp helpers.cpp -lcuda -lcudart -o filter
-
-TARGET = blur
+TARGET = filter
 
 all: $(TARGET)
 
