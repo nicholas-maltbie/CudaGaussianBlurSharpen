@@ -1,10 +1,11 @@
 #ifndef KERNELS_H_
 #define KERNELS_H_
 
-#define BLUR_FILTER     1
-#define IDENTITY_FILTER 0
+#define IDENTITY_FILTER     10
+#define BOX_BLUR_FILTER     20
+#define GAUSS_BLUR_FILTER   21
 
-void filter (unsigned char* input_image, unsigned char* output_image, int width, int height, int filte_type);
+void filter (unsigned char* input_image, unsigned char* output_image, int width, int height, int filte_type, int fsize);
 
 
 #endif
