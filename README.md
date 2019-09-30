@@ -55,6 +55,17 @@ Here is a description of the different filters
 | 3 | sharpen | NO | Applys a sharpening kernel which follows the basic format of [[0, -1, 0][-1, 5, 1][0, -1, 0]] (where 5 is the center pixel) |
 | 4 | Unsharpening mask | YES | Applays an [unsharpening mask](https://en.wikipedia.org/wiki/Unsharp_masking) to each pixel which is essentially a gaussian based sharpening kernel |
 
+## Sample
+
+|Filter|Size|Image|
+|------|----|-----|
+|Original| | ![Original Image of Building](sample/img.png) |
+|Box Blur| 3x3 |![Box Blur 3x3 of Building](sample/img_box.png) |
+|Box Blur| 21x21 |![Box Blur 10x10 of Building](sample/img_box_10.png) |
+|Gaussian Blur| 21x21 | ![Gaussian Blur 21x21 of Building](sample/img_gauss_10.png)
+|Sharp | 3x3 | ![Sharp 3x3 of Building](sample/img_sharp.png) |
+|Unsharp mask | 21x21 | ![Unsharp Mask 21x21 Image of Building](sample/img_unsharp.png) |
+
 ## Sources
 
 Example project code used from
