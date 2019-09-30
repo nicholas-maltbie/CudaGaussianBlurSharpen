@@ -93,6 +93,19 @@ void filter (unsigned char* input_image, unsigned char* output_image, int width,
         float sharpen[] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
         memcpy(filter, sharpen, 9 * sizeof(float));
     }
+    else if (filter_type == UNSHARP_MASKING) {
+        int size = 2 * fsize + 1;
+        filter = gaussianDistance(fsize / 3, fsize);
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                filter[row * size + col] = -filter[row * size + col];
+                if (row == fsize && col == fsize) {
+                    filter[row * size + col] += 2;
+                }
+            }
+        }
+        
+    }
 
     float* dev_filter;
 

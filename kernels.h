@@ -5,6 +5,7 @@
 #define BOX_BLUR_FILTER     20
 #define GAUSS_BLUR_FILTER   21
 #define SHARPEN_FILTER      30
+#define UNSHARP_MASKING     31
 
 void filter (unsigned char* input_image, unsigned char* output_image, int width, int height, int filte_type, int fsize);
 

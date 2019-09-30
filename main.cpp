@@ -14,12 +14,13 @@ int main(int argc, char** argv) {
         printf("    img_out.png - path to output image (png format)\n");
         printf("    filter_type - type of filter to use, specified by int\n");
         printf("        0 : no filter\n");
-        printf("        1 : box_blur\n");
-        printf("        2 : gaussian_blur\n");
+        printf("        1 : box_blur            (uses filter_size)\n");
+        printf("        2 : gaussian_blur       (uses filter_size)\n");
         printf("        3 : sharpen\n");
-        printf("    filter_size - if a filter has a size parameter, this is the value\n");
+        printf("        4 : Unsharp masking     (uses filter_size)\n");
+        printf("    filter_size - if a filter has a size parameter.\n");
         printf("        This is the radius of the filter. A value of zero\n");
-        printf("        will result in a 1x1 filter, 2 in a 3x3 filter, etc...");
+        printf("        will result in a 1x1 filter, 2 in a 3x3 filter, etc...\n");
         return 0;
     }
 
@@ -68,8 +69,12 @@ int main(int argc, char** argv) {
     else if (filter_type == 3) {
         sel_filter = SHARPEN_FILTER;
     }
+    else if (filter_type == 4) {
+        sel_filter = UNSHARP_MASKING;
+        filter_size = atoi(argv[4]);
+    }
     else {
-        printf("Invalid filter type %i selected", filter_type);
+        printf("Invalid filter type %i selected\n", filter_type);
         return 1;
     }
 
