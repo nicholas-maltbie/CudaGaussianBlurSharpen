@@ -8,7 +8,7 @@
 
 
 int main(int argc, char** argv) {
-    if(argc < 5) {
+    if(argc < 4) {
         printf("Usage: %s img_in.png img_out.png filter_type filter_size\n", argv[0]);
         printf("    img_in.png - path to input image (png format)\n");
         printf("    img_out.png - path to output image (png format)\n");
@@ -18,6 +18,8 @@ int main(int argc, char** argv) {
         printf("        2 : gaussian_blur\n");
         printf("        3 : sharpen\n");
         printf("    filter_size - if a filter has a size parameter, this is the value\n");
+        printf("        This is the radius of the filter. A value of zero\n");
+        printf("        will result in a 1x1 filter, 2 in a 3x3 filter, etc...");
         return 0;
     }
 

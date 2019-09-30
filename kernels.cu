@@ -45,9 +45,9 @@ void apply_filter(unsigned char* input_image, unsigned char* output_image, int w
             }
         }
 
-        output_image[offset*3] = output_red;
-        output_image[offset*3+1] = output_green;
-        output_image[offset*3+2] = output_blue;
+        output_image[offset*3] = min(max(output_red, 0.0), 255.0);
+        output_image[offset*3+1] = min(max(output_green, 0.0), 255.0);
+        output_image[offset*3+2] = min(max(output_blue, 0.0), 255.0);
     }
 }
 
@@ -87,6 +87,12 @@ void filter (unsigned char* input_image, unsigned char* output_image, int width,
     else if (filter_type == GAUSS_BLUR_FILTER) {
         filter = gaussianDistance(fsize / 3, fsize);
     }
+    else if (filter_type == SHARPEN_FILTER) {
+        fsize = 1;
+        filter = new float[9];
+        float sharpen[] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
+        memcpy(filter, sharpen, 9 * sizeof(float));
+    }
 
     float* dev_filter;
 
@@ -96,10 +102,11 @@ void filter (unsigned char* input_image, unsigned char* output_image, int width,
     getError(cudaMalloc( (void**) &dev_filter, filter_elements*sizeof(float)));
     getError(cudaMemcpy( dev_filter, filter, filter_elements*sizeof(float), cudaMemcpyHostToDevice ));
 
+    delete[] filter;
+
     apply_filter<<<gridDims, blockDims>>>(dev_input, dev_output, width, height, dev_filter, fsize); 
 
     cudaDeviceSynchronize();
-
 
     getError(cudaMemcpy(output_image, dev_output, width*height*3*sizeof(unsigned char), cudaMemcpyDeviceToHost ));
 
